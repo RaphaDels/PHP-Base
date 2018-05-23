@@ -1,8 +1,7 @@
 
 <?php
 
-// Créer une variable avec le prénom et l'afficher dasn un h1.
-//2 méthodes
+//Exo : Créer une variable avec le prénom et l'afficher dans un h1. 2 méthodes :
 
 $prenom = 'Raphaële';
 
