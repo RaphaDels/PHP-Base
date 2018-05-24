@@ -27,19 +27,34 @@
         $nombre1 = 845;
         $nombre2 = 312;
         $reste = null;      
-        $resultat = null;   //13
+        $pgcd = null;   
+        // le var_dump peut nous aider à comprendre le résultat d'une comparaison
+        var_dump(null != 0);
         
-        /*
+        echo 'Le pgcd de '. $nombre1 .' et '. $nombre2 .' est : ';
+
+        /* ex d'algorithme
         845 % 312 = 221;
         312 % 221 = 91;
         221 % 91 = 39;
         91 % 39 = 13;
         39 % 13 = 0;
         */
-
         // Tant que le reste est strictement différent de 0
         // nombrePlusGrand % nombrePlusPetit
 
+        $dividend = $nombre1;
+        $divisor = $nombre2;
+        while ($reste !== 0) {
+            $pgcd = $divisor;               //= le pgcd potentiel
+            $reste = $dividend % $divisor;  //845 % 312 = 221
+            $dividend = $divisor;           //845 devient 312
+            $divisor = $reste;              //312 devient 221 (312 % 221 = 91)
+            if ($reste == 0){
+                echo $pgcd;
+            }
+        }
+        
 
     ?>
 <p><strong>Exercice 4</strong> - Coder le jeu du FizzBuzz :
