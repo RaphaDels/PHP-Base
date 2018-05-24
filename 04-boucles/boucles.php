@@ -24,7 +24,7 @@
     ?>
 <p><strong>Exercice 3</strong> - Ecrire le code permettant de trouver le PGCD (plus grand commun diviseur) de 2 nombres.</p>
     <?php
-        $nombre1 = 845;
+        $nombre1 = 845; 
         $nombre2 = 312;
         $reste = null;      
         $pgcd = null;   
@@ -67,19 +67,90 @@
     </ol>
 </p>
     <?php
+        /*
         for($k=1 ; $k <= 100 ; $k++){
             if($k % 3 === 0 && $k % 5 != 0 ){
                 echo 'Fizz'.'<br/>';
             } elseif($k % 5 === 0 && $k % 3 != 0 ){
                 echo 'Buzz'.'<br/>';
-            } elseif($k % 3 === 0 && $k % 5 === 0){ //ou ($k % 15 === 0)
+            } elseif($k % 15 === 0){        //ou ($k % 3 === 0 && $k % 5 === 0)
                 echo 'FizzBuzz'.'<br/>';
             } else {
                 echo $k .'<br/>';
             }
+        } */
+        
+        //solution plus simple : mettre le % 15 en 1re condition
+        for($k=1 ; $k <= 100 ; $k++){
+            if($k % 15 === 0){
+                echo 'FizzBuzz'.'<br/>';
+            } elseif($k % 5 === 0){
+                echo 'Buzz'.'<br/>';
+            } elseif($k % 3 === 0){       
+                echo 'Fizz'.'<br/>';
+            } else {
+                echo $k .'<br/>';
+            }
+        }
+    ?>
+
+<p><strong>Exercice 5</strong> :
+    <ol>
+        <li>Créer une boucle qui affiche 10 étoiles.</li>
+        <li>Imbriquer la boucle dans une autre boucle afin d'afficher 10 lignes de 10 étoiles. Nous obtenons un carré.</li>
+        <li>Trouver un moyen de modifier le code pour obtenir un triangle.</li>
+    </ol>
+</p>
+    <?php
+    //carré
+        for($y=0 ; $y < 10; $y++) {
+            for($x=0 ; $x < 10; $x++) {
+                echo ' 🍔 ';
+            }
+            echo '<br/>';
         }
 
+    //triangle 1
+        for($y=0 ; $y < 10; $y++) {
+            for($x=$y ; $x < 10; $x++) {
+                echo ' 🍓 ';
+            }
+            echo '<br/>';
+        }
+    
+    //triangle 2
+    for($y=0 ; $y < 10; $y++) {
+        for($x=0 ; $x <= $y ; $x++) {
+            echo '🍒';
+        }
+        echo '<br/>';
+    }
+
+    //triangle 3
+    $start = 5; //pour placer la 1re étoile au centre de la 1re ligne
+    $size = 1;  //le nombre de cercueil à afficher
+
+    for($i=0 ; $i < 6 ; $i++){
+        for($j=0 ; $j < 11; $j++){
+            if($j == $start ){
+                for($a = 0; $a < $size; $a++) {
+                    echo '⚰️';
+                }
+                $j += $size - 1; //pour éviter que les urnes débordent du carré
+            } else {
+                echo ' ⚱️ ';
+            }    
+        }
+        $start--; //on décrémente la variable à la fin de chaque ligne
+        $size += 2; //on augmente le nombre de cercueil à afficher entre chaque ligne
+        echo '<br/>';
+    }
+
+
+
     ?>
+
+
 
 
 </body>
