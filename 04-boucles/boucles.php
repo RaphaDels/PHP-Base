@@ -125,7 +125,7 @@
         }
         echo '<br/>';
     }
-
+    
     //triangle 3
     $start = 5; //pour placer la 1re étoile au centre de la 1re ligne
     $size = 1;  //le nombre de cercueil à afficher
@@ -145,9 +145,6 @@
         $size += 2; //on augmente le nombre de cercueil à afficher entre chaque ligne
         echo '<br/>';
     }
-
-
-
     ?>
 
 
