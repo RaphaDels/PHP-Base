@@ -15,6 +15,11 @@ echo '<br/>';
 
 echo date('l j F Y') . ' il est '. date('h\hi') .' et '. date('s') . ' secondes.' ;
 
- 
+echo '<br/>'; 
 
-//Ecrire la date
+//Trouver la date qu'il sera dans 10 jours
+
+echo strtotime('+10 days'); //on récupère le timestamp
+echo '<br/>';
+//on convertit le timestamp en jour avec date()
+echo date('l j F Y', 1528096555);
