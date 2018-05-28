@@ -3,7 +3,7 @@
 $eleves = [
     [
         'nom' => 'Matthieu',
-        'notes' => [10, 8, 16, 20, 17, 20, 15, 2]
+        'notes' => [10, 8, 16, 20, 17, 0, 15, 2]
     ],
     [
         'nom' => 'Thomas',
@@ -108,4 +108,52 @@ $eleves = [
 
 
 //5. Qui a eu au moins un 20 ?
-//ex : Personne n'a eu 20. Untel a eu 20
+//ex : Personne n'a eu 20. Quelqu'un a eu 20
+
+$noteToCheck = 20;
+$noteIsCheck = false;
+
+foreach ($eleves as $eleve){
+    foreach ($eleve['notes'] as $note){
+        if ($note === $noteToCheck){
+            $noteIsCheck = true;
+            //break; //arrête le foreach
+            break 2; //arrête les 2 foreach
+        } 
+    }
+    var_dump($eleve); //ne s'affiche pas avec le break 2
+}
+
+if ($noteIsCheck){
+    echo 'Quelqu\'un a eu 20.';
+} else {
+    echo 'Personne n\'a eu 20.';
+}
+
+
+
+//6. BONUS : Tri à bulles
+
+//tbl à trier :
+$notes = [4, 25, 1, 36, 24];
+$i = 0; //compteur i qui va être incrémenté
+
+//On parcourt le tbl et tant que $i est inférieur à la taille du tbl:
+while($i < count($notes) -1) {
+    //on met -1 parce qu'on commence à zéro
+    //on vérifie si la 2e valeur est supérieure à la 1re valeur
+    if($notes[$i] > $notes[$i + 1]) {
+        $temp = $notes[$i]; //on stocke le 4 dans la variable temporaire
+        $notes[$i] = $notes[$i + 1]; //on met le 25 à la place du 4
+        $notes[$i + 1] = $temp; //on met le 4 à la place du 25
+        $i = 0;
+    } else {
+        //on incrémente le compteur seulement s'il n'y a pas d'échange
+        $i++; 
+    }
+}
+var_dump($notes);
+
+//solution plus simple : le arsort (=array sort)
+
+
