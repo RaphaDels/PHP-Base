@@ -8,7 +8,7 @@ $db = new PDO('mysql:host=localhost;dbname=movie_catalog;charset=UTF8', 'root', 
 
 
 //Ecrire une requête qui récupère un film par son id
-//l'id doit provenir de l'url. ex : si je saisis movie.php?id=43, la requete doit récupérer le film dont l'id est 43
+//l'id doit provenir de l'url. ex : si je saisis movie.php?id=17, la requete doit récupérer le film dont l'id est 17
 
 
 //je récupère l'id dans l'url grâce à $_GET
@@ -21,5 +21,4 @@ $query = $db->query('SELECT * FROM movie WHERE id =' . $id);
 $movie = $query->fetch();
 
 echo('Le film qui porte l\'id '.$movie['id'] .' est '. $movie['name']);
-
 
