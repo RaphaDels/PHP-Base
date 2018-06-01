@@ -33,8 +33,6 @@ $query->bindValue(':id', $beer['EBC_id'], PDO::PARAM_INT);
 $query->execute();
 $ebc = $query->fetch();
 
-
-
 ?>
 
 
