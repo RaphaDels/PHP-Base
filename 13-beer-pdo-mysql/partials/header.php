@@ -2,6 +2,7 @@
 //Configuration de PDO pour la base de données
 //on utilise la notation absolue (DIR) pour se repérer parce qu'on appelle database.php dans le header.php qui est lui-même appelé dans index.php, beer_list.php...
 require(__DIR__.'/../config/database.php');
+require('functions.php');
 ?>
 
 <!doctype html>
@@ -46,8 +47,8 @@ require(__DIR__.'/../config/database.php');
                     </li>
                 </ul>
                 <!-- Barre de recherche -->
-                <form method="GET" action="search.php" name="search" class="form-inline ml-5">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Recherche..." aria-label="Search">
+                <form method="GET" action="search.php" class="form-inline ml-5">
+                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Recherche..." aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Chercher !</button>
                 </form>
             </div>

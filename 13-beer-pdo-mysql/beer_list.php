@@ -18,8 +18,9 @@
     <h1>Nos bières !</h1>
     <div class="row pt-3">
         <?php
+        getBeerList($beers);
             //On affiche la liste des bières
-            foreach ($beers as $beer) { 
+           /* foreach ($beers as $beer) { 
                 echo '<div class="col-md-3">';
                     echo '<div class="card mb-4 box-shadow">';
                         echo '<img class="beer-img d-block card-img-top" src="'.$beer['image'].'"/>';
@@ -32,7 +33,7 @@
                         echo '</div>';
                     echo '</div>';
                 echo '</div>';
-            } 
+            } */
         ?>
     </div>
 </div>
