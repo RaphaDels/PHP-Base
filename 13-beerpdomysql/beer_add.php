@@ -32,7 +32,7 @@ require('partials/header.php'); ?>
         }
     ?>
 
-    <form method="POST" action="">
+    <form method="POST" action="" enctype="multipart/form-data">
         <?php
         /*$fields = ['name' => 'Nom', 'degree' => 'Degrès', 'price' => 'Prix']; // Les champs du formulaire à afficher
         foreach ($fields as $field => $label) { ?>
@@ -53,6 +53,11 @@ require('partials/header.php'); ?>
         <div class="form-group">
             <label for="price">Prix :</label>
             <input type="text" name="price" id="price" class="form-control" value="<?php echo $price; ?>">
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image :</label>
+            <input type="file" name="image" id="image" class="form-control">
         </div>
 
         <div class="form-group">
@@ -96,6 +101,23 @@ require('partials/header.php'); ?>
     </form>
 
     <?php
+        // Permet de transformer/slugifier un nom
+        // Exemple : Ch'ti Ambrée -> chti-ambree
+        function slugify($string) {
+            $newString = str_replace(' ', '-', $string);
+            $newString = str_replace('\'', '', $newString);
+            $newString = str_replace(['à', 'á', 'â', 'ã', 'ä', 'ç', 'è','é','ê','ë', 'ì','í','î','ï', 'ñ',
+            'ò','ó','ô','õ','ö', 'ù','ú','û','ü', 'ý','ÿ', 'À','Á','Â','Ã',
+            'Ä','Ç', 'È','É','Ê','Ë', 'Ì','Í','Î','Ï', 'Ñ', 'Ò','Ó','Ô','Õ',
+            'Ö', 'Ù','Ú','Û','Ü', 'Ý'], ['a','a','a','a','a', 'c', 'e','e','e','e', 'i','i','i','i', 'n',
+            'o','o','o','o','o', 'u','u','u','u', 'y','y', 'A','A','A','A','A',
+            'C','E','E','E','E', 'I','I','I','I', 'N', 'O','O','O','O','O',
+            'U','U','U','U', 'Y'], $newString);
+            $newString = strtolower($newString);
+
+            return $newString;
+        }
+
         // Détecter quand le formulaire est soumis
         // On peut aussi utilise $_SERVER
         if (!empty($_POST)) {
@@ -158,19 +180,38 @@ require('partials/header.php'); ?>
                 $query->bindValue(':name', $name, PDO::PARAM_STR);
                 $query->bindValue(':degree', $degree, PDO::PARAM_STR);
                 $query->bindValue(':volum', $volum, PDO::PARAM_INT);
-                $query->bindValue(':image', 'img/chimay-chimay-rouge.jpg', PDO::PARAM_STR);
+                $query->bindValue(':image', null, PDO::PARAM_STR);
                 $query->bindValue(':price', $price, PDO::PARAM_STR);
                 $query->bindValue(':brand_id', $brand_id, PDO::PARAM_INT);
                 $query->bindValue(':ebc_id', $type_id, PDO::PARAM_INT);
 
                 if ($query->execute()) { // On insère la bière dans la BDD
+
+                    // Upload de l'image
+                    // Récupére l'emplacement temporaire du fichier
+                    $file = $_FILES['image']['tmp_name'];
+
+                    // Récupérer l'extension du fichier
+                    $originalName = $_FILES['image']['name'];
+                    $extension = pathinfo($originalName)['extension']; // Retourne jpg, png ou gif
+
+                    // Générer le nom de l'image
+                    // Ch'ti -> chti
+                    // Ch'ti Ambrée -> chti-ambree
+                    $brand = slugify($brand['name']);
+                    $name = slugify($name);
+                    $filename = $brand.'-'.$name.'.'.$extension;
+                    var_dump($filename);
+
                     echo '<div class="alert alert-success">La bière a bien été ajouté.</div>';
                 }
 
             }
         }
-        // Vérifier les champs
+        // Debug du formulaire
         var_dump($_POST);
+        // Debug de l'upload
+        var_dump($_FILES);
     ?>
 </div>
 

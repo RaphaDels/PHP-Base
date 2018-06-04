@@ -13,7 +13,7 @@ git branch prenom
 Vous pouvez ajouter un remote upstream (en plus de votre origin) vers ce dépôt (WebforceLille9) avec :
 
 ```
-git remote add upstream https://github.com/WebforceLille9/PHP.git
+git remote add upstream https://github.com/WebforceLille9/PHP-Base.git
 ```
 
 Vous avez maintenant 2 branches master, celle de ce dépôt (du formateur) et de votre dépôt.
