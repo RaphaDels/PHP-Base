@@ -4,9 +4,10 @@
 require('partials/header.php'); 
 
 
-$search = $_GET['id'];
 
 
+$search = $_GET['search'];
+var_dump($search);
 
 
 

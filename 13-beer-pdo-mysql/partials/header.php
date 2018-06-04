@@ -31,7 +31,7 @@ require(__DIR__.'/../config/database.php');
             </button>
             <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
 
-                <!-- Pour appliquer la classe active à la page affichée (+ dans le <li>) -->
+                <!-- Pour appliquer la classe active à la page affichée (+ partie dans le <li>) -->
                 <?php $page = basename($_SERVER['REQUEST_URI'], '.php'); ?>
 
                 <ul class="navbar-nav ml-auto ">
@@ -45,7 +45,8 @@ require(__DIR__.'/../config/database.php');
                         <a class="nav-link" href="beer_add.php">Ajouter une bière</a>
                     </li>
                 </ul>
-                <form method="GET" action="" class="form-inline ml-5">
+                <!-- Barre de recherche -->
+                <form method="GET" action="search.php" name="search" class="form-inline ml-5">
                     <input class="form-control mr-sm-2" type="search" placeholder="Recherche..." aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Chercher !</button>
                 </form>
