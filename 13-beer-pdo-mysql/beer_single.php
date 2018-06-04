@@ -13,7 +13,7 @@ $id = $_GET['id'];
 //$query = $db->query('SELECT * FROM beer WHERE id =' . $id);
 
 
-//POUR SE PROTEGER CONTRE LES INJONCTIONS SQL : LES REQUETES PREPAREES
+//POUR SE PROTEGER CONTRE LES INJECTIONS SQL : LES REQUETES PREPAREES
 $query = $db->prepare('SELECT * FROM beer WHERE id = :id');  // :id est un paramètre (pas de concaténation)
 $query->bindValue(':id', $id, PDO::PARAM_INT);  // On s'assure que l'id est bien un entier
 $query->execute(); //execute la requete

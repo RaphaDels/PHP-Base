@@ -44,7 +44,9 @@
     ?>
 
     <div class="row pt-3">
-        <form method="POST" action="">
+        
+        <form method="POST" action="" enctype="multipart/form-data">
+            <!-- L'attribut enctype sur le form est obligatoire pour l'upload de fichiers (images, cv...) -->
             <!-- Je fais une boucle pour créer les inputs similaires (champs libres): nom, degrès, prix -->
             <?php
             $fields = ['name' => 'Nom', 'degree' => 'Degrès d\'alcool', 'price' => 'Prix'];
@@ -93,6 +95,10 @@
                     </select>
                 </datalist>
             </div>
+            <div>
+                <label for="image">Télécharger l'image : </label>
+                <input type="file" name="image"/>
+            </div>
             <div class="">
                 <button type="submit" class="btn my-2">Ajouter !</button>
             </div>
@@ -100,7 +106,37 @@
     </div>
     
     <?php 
+        //Créer la fonction slugify pour le traitement du nom de l'image (voir plus bas)
+        //ex : Ch'ti Ambrée devient : chti-ambree
+        function slugify($string) {
+            $newString = str_replace(' ', '-', $string);
+            $newString = str_replace("'", '', $newString);
+            $newString = str_replace(
+                array(
+                'à', 'â', 'ä', 'á', 'ã', 'å',
+                'î', 'ï', 'ì', 'í',
+                'ô', 'ö', 'ò', 'ó', 'õ', 'ø',
+                'ù', 'û', 'ü', 'ú',
+                'é', 'è', 'ê', 'ë',
+                'ç', 'ÿ', 'ñ',
+                ),
+                array(
+                'a', 'a', 'a', 'a', 'a', 'a',
+                'i', 'i', 'i', 'i',
+                'o', 'o', 'o', 'o', 'o', 'o',
+                'u', 'u', 'u', 'u',
+                'e', 'e', 'e', 'e',
+                'c', 'y', 'n',
+                ),
+                $newString
+            );
+            $newString = mb_strtolower($newString, 'UTF-8');
+            return $newString;
+        }
+        //var_dump(slugify("Ch'ti ambrée"));
+
         
+        //VERIF DU FORM AVANT ENVOI EN BDD
         //Définir un tableau d'erreurs vide qui va se remplir après chaque erreur
             $errors = [];
 
@@ -161,21 +197,54 @@
                 $query = $db->prepare('
                 INSERT INTO beer (`name`, degree, volume, `image`, price, brand_id, ebc_id)  
                 VALUES (:name, :degree, :volume, :image, :price, :brand_id, :ebc_id)
-                ');
+                '); 
                 $query->bindValue(':name', $name, PDO::PARAM_STR);
                 $query->bindValue(':degree', $degree, PDO::PARAM_STR);
                 $query->bindValue(':volume', $volume, PDO::PARAM_INT);
-                $query->bindValue(':image', 'img/chimay-chimay-rouge.png', PDO::PARAM_STR);
+                $query->bindValue(':image', null, PDO::PARAM_STR); //on ajoute la bière d'abord sans image puis on la rajoute une fois l'upload traité (extension, taille...)
                 $query->bindValue(':price', $price, PDO::PARAM_STR);
                 $query->bindValue(':brand_id', $brand_id, PDO::PARAM_INT);
                 $query->bindValue(':ebc_id', $type_id, PDO::PARAM_INT);
 
                 //insère la bière dans la bdd en executant la fonction
                 if ($query->execute()) {   
+                    
+                //UPLOAD DE L'IMAGE
+                    //Récupérer l'emplacement temporaire du fichier
+                    $file = $_FILES['image']['tmp_name']; //cf var_dump($_FILES)
+
+                    //Récupérer l'extension du fichier (jpg, jpeg, png, gif, pdf...)
+                    $originalName = $_FILES['image']['name'];
+                    $extension = pathinfo($originalName)['extension'];
+                    //pathinfo => entre () = ce qu'il doit analyser et entre [] = ce qu'on veut récupérer
+
+                    //Générer le nom de l'image (Ch'ti Ambrée doit devenir chti-ambree)
+                    //le résultat doit être : marque-nom-de-la-biere.extension
+                    $brand = slugify($brand['name']);  //on l'a récupéré avec: $brand = $query->fetch();
+                    $name = slugify($name);
+
+                    $filename = $brand.'-'.$name.'.'.$extension;
+                    var_dump($filename);
+
+
+/*
+                    // Renomme le fichier
+                    $md5 = md5($originalName.uniqid());
+                    $filename = $md5.'.'.$extension;
+
+                    // Déplace le fichier vers un répertoire
+                    move_uploaded_file($file, __DIR__.'/upload/'.$filename);
+
+*/
                     echo '<div class="alert alert-success">La bière a bien été ajoutée !</div>';
                 }
                 
             }
+            //DEBUG DE L'UPLOAD
+            var_dump($_FILES);
+
+            
+
 
 
 
