@@ -1,10 +1,7 @@
 <?php
     //Inclure le fichier config/database.php  
-
-
     //Inclure le fichier partials/header.php 
     require('partials/header.php'); 
-
 
     //Récupérer la liste des bières
     //Requête 
@@ -42,7 +39,6 @@
 
 
 <?php
-
-//Inclure le fichier partials/footer.php 
-
-require('partials/footer.php'); ?>
+    //Inclure le fichier partials/footer.php 
+    require('partials/footer.php'); 
+?>

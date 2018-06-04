@@ -13,17 +13,19 @@ require(__DIR__.'/../config/database.php');
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Lien vers style.css -->
     <link rel="stylesheet" href="css/style.css">
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Bowlby+One+SC" rel="stylesheet">
 
     <title>Projet Beer PDO</title>
   </head>
+  
   <body>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark ">
         <div class="container">
             <img class="logo" src="img/beer-icon.png"/> 
-            <a class="navbar-brand" href="index.php">Beer PDO</a>
+            <a class="navbar-brand" href="index.php">My Beer PDO</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -32,7 +34,7 @@ require(__DIR__.'/../config/database.php');
                 <!-- Pour appliquer la classe active à la page affichée (+ dans le <li>) -->
                 <?php $page = basename($_SERVER['REQUEST_URI'], '.php'); ?>
 
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ml-auto ">
                     <li class="nav-item <?php echo ($page == 'index') ? 'active' : '' ?>">
                         <a class="nav-link" href="index.php">Accueil <span class="sr-only">(current)</span></a>
                     </li>
@@ -43,6 +45,10 @@ require(__DIR__.'/../config/database.php');
                         <a class="nav-link" href="beer_add.php">Ajouter une bière</a>
                     </li>
                 </ul>
+                <form method="GET" action="" class="form-inline ml-5">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Recherche..." aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Chercher !</button>
+                </form>
             </div>
         </div>    
     </nav>

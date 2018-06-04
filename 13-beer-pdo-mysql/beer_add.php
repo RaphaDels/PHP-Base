@@ -1,28 +1,26 @@
 <?php
-
-//Inclure le fichier partials/header.php 
+    //Inclure le fichier partials/header.php 
     require('partials/header.php'); 
-
 ?>
 
-
-    <!-- Le contenu de la page -->
+<!-- LE CONTENU HTML DE LA PAGE -->
 <div class="container pt-5">
     <div class="row pt-3">
         <h1>Ajoutez une bière</h1>
     </div>
 
     <?php 
-        //Je déclare mes variables (vides) et je fais le if avant le formulaire pour qu'en cas d'erreur, les champs saisis correctement restent enregistrés
+        //Je déclare mes variables (vides) et je fais le if qui liste les erreurs avant le formulaire pour qu'en cas d'erreur, les champs saisis correctement restent enregistrés
         $name = null;
         $degree = null; 
         $price = null;
         $volume = null;
         $brand = null;
         $type = null;
+        $image = null;
 
         //Pour détecter quand le formulaire est soumis : soit !empty soit :
-        //var_dump($_SERVER);  //// 'REQUEST_METHOD' => string 'POST' (length=4) -> permet de voir si formulaire GET (non soumis) ou POST (soumis)      
+        //var_dump($_SERVER);  //-> 'REQUEST_METHOD' => string 'POST' (length=4) -> permet de voir si formulaire GET (il est donc non soumis) ou POST (il est bien soumis)      
         
         if(!empty($_POST)) {  
             $name = $_POST['name'];         //doit faire au moins 3 caractères 
@@ -39,12 +37,141 @@
             foreach ($_POST as $key => $field) {
                 $$key = $field;     
             }*/
-        }
+            
+            //POUR VERIFIER SI UNE IMAGE A BIEN ETE UPLOADEE
+            if (!empty($_FILES['image']['tmp_name'])) { //on vérifie si le nom temporaire est vide ou non (si le nom temporaire est vide c'est qu'on n'a pas téléchargé d'image)
+                $image = $_FILES['image'];
+            }
+            
+            //VERIF DU FORM AVANT ENVOI EN BDD
+            //Définir un tableau d'erreurs vide qui va se remplir après chaque erreur
+            $errors = [];
+
+            //LISTER ET VERIFIER LES ERREURS POSSIBLES
+                if (strlen($name) < 3) {
+                    $errors['name'] = 'Le nom n\'est pas valide'; //équivaut à: array_push($errors, 'Le nom n\'est pas valide'); 
+                    $isValid = false;
+                }
+                if (!is_numeric($degree) || $degree < 0 || $degree > 20) {
+                    $errors['degree'] = 'Le degré n\'est pas valide'; 
+                    $isValid = false;
+                }
+                if (!is_numeric($price) || $price < 0.01 || $price > 99.99) {
+                    $errors['price'] = 'Le prix n\'est pas valide'; 
+                    $isValid = false;
+                }
+                if (!in_array($volume, [250, 330, 500, 750])) {
+                    //je crée un tbl avec les valeurs possibles
+                    // équivaut à ($volume != 250 && $volume != 330 && $volume != 500 && $volume != 750) {
+                    $errors['volume'] = 'Le volume n\'est pas valide'; 
+                    $isValid = false;
+                }
+
+            //VERIFIER QUE LA MARQUE SAISIE EXISTE 
+                $brand_id = intval(substr($brand, -1)); 
+                //intval() pour retourner la valeur numérique entière équivalente d'une variable 
+                //et substr() pour récupérer le chiffre de "Duvel - 2"
                 
+                //requete pour aller chercher la marque en bdd
+                $query = $db->prepare('SELECT * FROM brand WHERE id = :id');
+                $query->bindValue(':id', $brand_id, PDO::PARAM_INT);
+                $query->execute();
+                $brand = $query->fetch();
+                //var_dump($brand);  //renvoie un booleen = true
+
+                if (!$brand) { //-> signifie if false (càd la marque n'existe pas)
+                    $errors['brand'] = 'Cette marque n\'existe pas'; 
+                }
+
+            //VERIFIER QUE LE TYPE SAISI EXISTE 
+                $type_id = intval(substr($type, -1));
+                
+                //Requete pour aller chercher le type
+                $query = $db->prepare('SELECT * FROM ebc WHERE id = :id');
+                $query->bindValue(':id', $type_id, PDO::PARAM_INT);
+                $query->execute();
+                $type = $query->fetch();
+                //var_dump($type); 
+    
+                if (!$type) {
+                    $errors['type'] = 'Ce type de bière n\'existe pas'; 
+                }
+
+            //VERIFICATION DE L'IMAGE UPLOADEE
+                //Vérifier si l'image est bien uploadée
+                    if ($image === null) {
+                        $errors['image'] = 'Vous n\'avez pas téléchargé d\'image'; 
+                    }
+
+                //Vérifier le type MIME de l'image uploadée avec finfo_file()
+                    if ($image) {
+                        $file = $image['tmp_name']; //l'emplacement temporaire du fichier uploadé
+                        $finfo = finfo_open(FILEINFO_MIME_TYPE); //permet d'ouvrir un fichier
+                        $mimeType = finfo_file($finfo, $file); //ouvre le fichier et renvoie  image/img
+                        //créer un tbl pour les mime types autorisés : 
+                        $allowedExtensions = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+                        //vérifier si le mime type obtenu ne figure pas dans ce tbl :
+                        if (!in_array($mimeType, $allowedExtensions)) {
+                            $errors['image'] = 'Ce type de fichier n\'est pas autorisé';
+                        }
+                    }
+
+                //Vérifier la taille de l'image uploadée (2Mo = 2 097 152 octets)
+                    if ($image['size'] > 2097152) {
+                        $errors['image'] = 'Ce fichier est trop lourd.';
+                    }
+                    
+                var_dump($errors);
+
+            //VERIFIER SI LE TBL D'ERREUR EST VIDE PUIS AJOUTER LA BIERE
+                if (empty($errors)) {
+                    $query = $db->prepare('
+                    INSERT INTO beer (`name`, degree, volume, `image`, price, brand_id, ebc_id)  
+                    VALUES (:name, :degree, :volume, :image, :price, :brand_id, :ebc_id)
+                    '); 
+                    $query->bindValue(':name', $name, PDO::PARAM_STR);
+                    $query->bindValue(':degree', $degree, PDO::PARAM_STR);
+                    $query->bindValue(':volume', $volume, PDO::PARAM_INT);
+                    $query->bindValue(':image', null, PDO::PARAM_STR); //on ajoute la bière d'abord sans image puis on la rajoute une fois l'upload traité (extension, taille...)
+                    $query->bindValue(':price', $price, PDO::PARAM_STR);
+                    $query->bindValue(':brand_id', $brand_id, PDO::PARAM_INT);
+                    $query->bindValue(':ebc_id', $type_id, PDO::PARAM_INT);
+
+                    //Insère la bière dans la bdd en executant la fonction
+                    if ($query->execute()) {    
+                        //UPLOAD DE L'IMAGE
+                        //Récupérer l'emplacement temporaire du fichier
+                        $file = $_FILES['image']['tmp_name']; //cf var_dump($_FILES)
+
+                        //Récupérer l'extension du fichier (jpg, jpeg, png, gif, pdf...)
+                        $originalName = $_FILES['image']['name'];
+                        $extension = pathinfo($originalName)['extension'];
+                        //pathinfo => entre () = ce qu'il doit analyser et entre [] = ce qu'on veut récupérer
+
+                        //Générer le nom de l'image (Ch'ti Ambrée doit devenir chti-ambree)
+                        //le résultat doit être : marque-nom-de-la-biere.extension
+                        $brand = slugify($brand['name']);  //on l'a récupéré avec: $brand = $query->fetch();
+                        $name = slugify($name);
+
+                        $filename = $brand.'-'.$name.'.'.$extension;
+                        var_dump($filename);
+
+                        //Déposer le fichier dans le dossier img
+                        move_uploaded_file($file, __DIR__.'/img/'.$filename);
+
+                        //Requête pour mettre à jour la bière en bdd afin d'associer l'image uploadée
+                        $query = $db->prepare('UPDATE beer SET `image` = :image WHERE id = :id');
+                        $query->bindValue(':image', 'img/'.$filename, PDO::PARAM_STR);
+                        $query->bindValue(':id', $db->lastInsertId(), PDO::PARAM_INT); //on récupère l'id de la dernière bière ajoutée
+                        $query->execute();
+
+                        echo '<div class="alert alert-success">La bière a bien été ajoutée !</div>';
+                    }   
+                }
+        } //end of if(!empty($_POST))    
     ?>
 
     <div class="row pt-3">
-        
         <form method="POST" action="" enctype="multipart/form-data">
             <!-- L'attribut enctype sur le form est obligatoire pour l'upload de fichiers (images, cv...) -->
             <!-- Je fais une boucle pour créer les inputs similaires (champs libres): nom, degrès, prix -->
@@ -54,12 +181,19 @@
                 <div class="form-group">
                     <label for="<?php echo $field; ?>"><?php echo $label; ?> : </label>
                     <!-- Je mets le $$field dans value pour qu'il mémorise les champs correctement saisis en cas d'erreur -->
-                    <input type="text" name="<?php echo $field; ?>" value="<?php echo $$field; ?>" id="<?php echo $name; ?>" class="form-control" placeholder="<?php echo $field; ?>">
+                    <input type="text" name="<?php echo $field; ?>" value="<?php echo $$field; ?>" id="<?php echo $name; ?>" class="form-control  <?php echo isset($errors['name']) ? 'is-invalid' : null; ?>" placeholder="<?php echo $field; ?>">
+                    
+                    <?php //pour mettre les champs en rouge en cas d'erreur 
+                    if (isset($errors[$field])) {
+                        echo '<div class="invalid-feedback">';
+                            echo $errors[$field];
+                        echo '</div>';
+                    } ?>
                 </div>
             <?php } ?>
             <div class="form-group">    
                 <label for="volume">Volume :</label>
-                <select class="form-control" name="volume" id="volume">
+                <select class="form-control" <?php echo isset($errors['volume']) ? 'is-invalid' : null; ?> name="volume" id="volume">
                     <option hidden readonly value="">Choisissez le volume</option>
                     <!-- le if permet de mémoriser la sélection en cas d'erreur sur un autre champ -->
                     <option <?php if ($volume == 250) { echo 'selected'; } ?> value="250">25 cl</option>
@@ -68,6 +202,12 @@
                     <option <?php if ($volume == 750) { echo 'selected'; } ?> value="750">75 cl</option>
                     <option <?php if ($volume == 1000) { echo 'selected'; } ?> value="1000">1 litre</option>
                 </select>
+                <?php //L'ERREUR NE FONCTIONNE PAS
+                if (isset($errors['volume'])) {
+                    echo '<div class="invalid-feedback">';
+                        echo $errors['volume'];
+                    echo '</div>';
+                } ?>
             </div>
             <div class="form-group">    
                 <label for="brand">Marque : </label>
@@ -136,121 +276,13 @@
         //var_dump(slugify("Ch'ti ambrée"));
 
         
-        //VERIF DU FORM AVANT ENVOI EN BDD
-        //Définir un tableau d'erreurs vide qui va se remplir après chaque erreur
-            $errors = [];
 
-            //Lister et vérifier les erreurs possibles
-            if (strlen($name) < 3) {
-                $errors['name'] = 'Le nom n\'est pas valide'; //équivaut à: array_push($errors, 'Le nom n\'est pas valide'); 
-                $isValid = false;
-            }
-            if (!is_numeric($degree) || $degree < 0 || $degree > 20) {
-                $errors['degree'] = 'Le degré n\'est pas valide'; 
-                $isValid = false;
-            }
-            if (!is_numeric($price) || $price < 0.01 || $price > 99.99) {
-                $errors['price'] = 'Le prix n\'est pas valide'; 
-                $isValid = false;
-            }
-            if (!in_array($volume, [250, 330, 500, 750])) {
-                //je crée un tbl avec les valeurs possibles
-                // équivaut à ($volume != 250 && $volume != 330 && $volume != 500 && $volume != 750) {
-                $errors['volume'] = 'Le volume n\'est pas valide'; 
-                $isValid = false;
-            }
-
-            //VERIFIER QUE LA MARQUE SAISIE EXISTE 
-            $brand_id = intval(substr($brand, -1)); 
-            //intval() pour retourner la valeur numérique entière équivalente d'une variable 
-            //et substr() pour récupérer le chiffre de "Duvel - 2"
             
-            //requete pour aller chercher la marque en bdd
-            $query = $db->prepare('SELECT * FROM brand WHERE id = :id');
-            $query->bindValue(':id', $brand_id, PDO::PARAM_INT);
-            $query->execute();
-            $brand = $query->fetch();
-            //var_dump($brand);  //renvoie un booleen = true
-
-            if (!$brand) { //-> signifie if false (càd la marque n'existe pas)
-                $errors['brand'] = 'Cette marque n\'existe pas'; 
-            }
-
-            //VERIFIER QUE LE TYPE SAISI EXISTE 
-            $type_id = intval(substr($type, -1));
-            
-            //Requete pour aller chercher le type
-            $query = $db->prepare('SELECT * FROM ebc WHERE id = :id');
-            $query->bindValue(':id', $type_id, PDO::PARAM_INT);
-            $query->execute();
-            $type = $query->fetch();
-            //var_dump($type); 
- 
-            if (!$type) {
-                $errors['type'] = 'Ce type n\'existe pas'; 
-            }
-
-            var_dump($errors);
-
-            //VERIFIER SI LE TBL D'ERREUR EST VIDE PUIS AJOUTER LA BIERE
-            if (empty($errors)) {
-                $query = $db->prepare('
-                INSERT INTO beer (`name`, degree, volume, `image`, price, brand_id, ebc_id)  
-                VALUES (:name, :degree, :volume, :image, :price, :brand_id, :ebc_id)
-                '); 
-                $query->bindValue(':name', $name, PDO::PARAM_STR);
-                $query->bindValue(':degree', $degree, PDO::PARAM_STR);
-                $query->bindValue(':volume', $volume, PDO::PARAM_INT);
-                $query->bindValue(':image', null, PDO::PARAM_STR); //on ajoute la bière d'abord sans image puis on la rajoute une fois l'upload traité (extension, taille...)
-                $query->bindValue(':price', $price, PDO::PARAM_STR);
-                $query->bindValue(':brand_id', $brand_id, PDO::PARAM_INT);
-                $query->bindValue(':ebc_id', $type_id, PDO::PARAM_INT);
-
-                //insère la bière dans la bdd en executant la fonction
-                if ($query->execute()) {   
-                    
-                //UPLOAD DE L'IMAGE
-                    //Récupérer l'emplacement temporaire du fichier
-                    $file = $_FILES['image']['tmp_name']; //cf var_dump($_FILES)
-
-                    //Récupérer l'extension du fichier (jpg, jpeg, png, gif, pdf...)
-                    $originalName = $_FILES['image']['name'];
-                    $extension = pathinfo($originalName)['extension'];
-                    //pathinfo => entre () = ce qu'il doit analyser et entre [] = ce qu'on veut récupérer
-
-                    //Générer le nom de l'image (Ch'ti Ambrée doit devenir chti-ambree)
-                    //le résultat doit être : marque-nom-de-la-biere.extension
-                    $brand = slugify($brand['name']);  //on l'a récupéré avec: $brand = $query->fetch();
-                    $name = slugify($name);
-
-                    $filename = $brand.'-'.$name.'.'.$extension;
-                    var_dump($filename);
-
-
-/*
-                    // Renomme le fichier
-                    $md5 = md5($originalName.uniqid());
-                    $filename = $md5.'.'.$extension;
-
-                    // Déplace le fichier vers un répertoire
-                    move_uploaded_file($file, __DIR__.'/upload/'.$filename);
-
-*/
-                    echo '<div class="alert alert-success">La bière a bien été ajoutée !</div>';
-                }
-                
-            }
             //DEBUG DE L'UPLOAD
             var_dump($_FILES);
 
-            
-
-
-
-
     ?>
     
-
 </div>
 
 <?php //Inclure le fichier partials/footer.php 
