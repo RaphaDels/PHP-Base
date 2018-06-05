@@ -31,7 +31,12 @@ require('functions.php');
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
-
+                <!-- Barre de recherche : action="search.php" vers la page de traitement de la recherche -->
+                <form method="GET" action="search.php" class="form-inline mx-auto">
+                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Recherche..." aria-label="Search">
+                    <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Chercher !</button>
+                </form>
+                
                 <!-- Pour appliquer la classe active à la page affichée (+ partie dans le <li>) -->
                 <?php $page = basename($_SERVER['REQUEST_URI'], '.php'); ?>
 
@@ -39,18 +44,19 @@ require('functions.php');
                     <li class="nav-item <?php echo ($page == 'index') ? 'active' : '' ?>">
                         <a class="nav-link" href="index.php">Accueil <span class="sr-only">(current)</span></a>
                     </li>
+                    <li class="nav-item <?php echo ($page == 'brewery_list') ? 'active' : '' ?>">
+                        <a class="nav-link" href="brewery_list.php">Nos brasseries</a>
+                    </li>
                     <li class="nav-item <?php echo ($page == 'beer_list') ? 'active' : '' ?>">
                         <a class="nav-link" href="beer_list.php">Nos bières</a>
                     </li>
                     <li class="nav-item <?php echo ($page == 'beer_add') ? 'active' : '' ?>">
-                        <a class="nav-link" href="beer_add.php">Ajouter une bière</a>
+                        <a class="nav-link" href="beer_add.php">Add a beer</a>
+                    </li>
+                    <li class="nav-item <?php echo ($page == 'brewery_add') ? 'active' : '' ?>">
+                        <a class="nav-link" href="brewery_add.php">Add a brewery</a>
                     </li>
                 </ul>
-                <!-- Barre de recherche -->
-                <form method="GET" action="search.php" class="form-inline ml-5">
-                    <input class="form-control mr-sm-2" type="search" name="q" placeholder="Recherche..." aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Chercher !</button>
-                </form>
             </div>
         </div>    
     </nav>

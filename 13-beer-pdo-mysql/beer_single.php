@@ -1,38 +1,38 @@
 <?php
 
-//ATTENTION : je dois bien lier mon header pour avoir accès à database.php
-    require('partials/header.php'); 
+    //ATTENTION : je dois bien lier mon header pour avoir accès à database.php
+        require('partials/header.php'); 
 
-//je récupère l'id dans l'url grâce à $_GET
-$id = $_GET['id'];
+    //je récupère l'id dans l'url grâce à $_GET
+    $id = $_GET['id'];
 
-//pour protéger mon url, je peux indiquer qu'il ne faut qu'un entier :
-//$id = intval($_GET['id']); //pas suffisant ! 
+    //pour protéger mon url, je peux indiquer qu'il ne faut qu'un entier :
+    //$id = intval($_GET['id']); //pas suffisant ! 
 
-//je lance une requete sur $db (je concatène la variable pour dynamiser la requête)
-//$query = $db->query('SELECT * FROM beer WHERE id =' . $id);
-
-
-//POUR SE PROTEGER CONTRE LES INJECTIONS SQL : LES REQUETES PREPAREES
-$query = $db->prepare('SELECT * FROM beer WHERE id = :id');  // :id est un paramètre (pas de concaténation)
-$query->bindValue(':id', $id, PDO::PARAM_INT);  // On s'assure que l'id est bien un entier
-$query->execute(); //execute la requete
-$beer = $query->fetch();
+    //je lance une requete sur $db (je concatène la variable pour dynamiser la requête)
+    //$query = $db->query('SELECT * FROM beer WHERE id =' . $id);
 
 
-//Je dois faire une 2e requete sur la table de la marque 
-//je peux utiliser $query car le fetch() a fermé la précédente requete
-//la prepare() n'est pas obligatoire si la variable ne vient pas d'une entrée utilisateur (une entree utilisateur vient de $_GET et $_POST)
-$query = $db->query('SELECT * FROM brand WHERE id = '.$beer['Brand_id']);
-$brand = $query->fetch();
+    //POUR SE PROTEGER CONTRE LES INJECTIONS SQL : LES REQUETES PREPAREES
+    $query = $db->prepare('SELECT * FROM beer WHERE id = :id');  // :id est un paramètre (pas de concaténation)
+    $query->bindValue(':id', $id, PDO::PARAM_INT);  // On s'assure que l'id est bien un entier
+    $query->execute(); //execute la requete
+    $beer = $query->fetch();
+    $countSQL++; //incrémente le nombre de requêtes dans le footer
 
+    //Je dois faire une 2e requete sur la table de la marque 
+    //je peux utiliser $query car le fetch() a fermé la précédente requete
+    //la prepare() n'est pas obligatoire si la variable ne vient pas d'une entrée utilisateur (une entree utilisateur vient de $_GET et $_POST)
+    $query = $db->query('SELECT * FROM brand WHERE id = '.$beer['Brand_id']);
+    $brand = $query->fetch();
+    $countSQL++; //incrémente le nombre de requêtes dans le footer
 
-//Je fais une 3e requete sur la table du type pour récupérer l'ebc
-$query = $db->prepare('SELECT * FROM EBC WHERE id = :id');
-$query->bindValue(':id', $beer['EBC_id'], PDO::PARAM_INT);
-$query->execute();
-$ebc = $query->fetch();
-
+    //Je fais une 3e requete sur la table du type pour récupérer l'ebc
+    $query = $db->prepare('SELECT * FROM EBC WHERE id = :id');
+    $query->bindValue(':id', $beer['EBC_id'], PDO::PARAM_INT);
+    $query->execute();
+    $ebc = $query->fetch();
+    $countSQL++; //incrémente le nombre de requêtes dans le footer
 ?>
 
 
@@ -69,7 +69,7 @@ $ebc = $query->fetch();
                         }
                     ?>
                     Type : <?php echo $type; ?>
-                    <span class="d-inline-block" style="background-color: #<?php echo $ebc['color']; ?>; width: 20px; height: 20px"></span>
+                    <span class="d-inline-block rounded-circle ml-2" style="background-color: #<?php echo $ebc['color']; ?>; width: 20px; height: 20px"></span>
                 </li>
             </ul>
         </div>

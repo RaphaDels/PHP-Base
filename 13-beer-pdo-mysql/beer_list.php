@@ -3,13 +3,26 @@
     //Inclure le fichier partials/header.php 
     require('partials/header.php'); 
 
+    /*
     //Récupérer la liste des bières
     //Requête 
     $query = $db->query('SELECT * FROM beer');
     //Résultat
     $beers = $query->fetchAll();
-
     //var_dump($beers);
+    */
+
+    //Requête pour récupérer la marque et l'ebc en plus du nom et de l'image (requete ci-dessus)
+    $query = $db->query(
+        'SELECT beer.id, beer.name, beer.image, brand.id as id_brand, brand.name as name_brand, ebc.code, ebc.color 
+        FROM beer
+        INNER JOIN brand ON beer.brand_id = brand.id
+        INNER JOIN ebc ON beer.ebc_id = ebc.id'
+    );
+    $beers = $query->fetchAll();
+    //var_dump($beers);
+    $countSQL++;
+
 ?>
 
 
@@ -18,16 +31,22 @@
     <h1>Nos bières !</h1>
     <div class="row pt-3">
         <?php
-        //fonction pour afficher les bières : 
+        //Appel de lafonction pour afficher les bières : 
         //getBeerList($beers);
             //On affiche la liste des bières
             foreach ($beers as $beer) { 
+                $countSQL++;
                 echo '<div class="col-md-3">';
                     echo '<div class="card mb-4 box-shadow">';
                         echo '<img class="beer-img d-block card-img-top" src="'.$beer['image'].'"/>';
                         echo '<div class="card-body">';
                             echo '<p class="text-center font-weight-bold">';
                                 echo $beer['name'];
+                            echo '</p>';
+                            echo '<p class="text-center">';
+                                echo 'Marque : '.$beer['name_brand'].'<br/>'; ?>
+                                <span class="d-inline-block rounded" style="background-color: #<?php echo $beer['color']; ?>; width: 50px; height: 10px"></span> 
+                            <?php
                             echo '</p>';
                             //ajouter un bouton (a href) voir la bière. quand on clique on arrive sur la page beer_single.php. Il faudrait que l'url ressemble à beer_single.php?id=IdDeLaBiere
                             echo '<a href="beer_single.php?id='.$beer['id'].'" class="btn btn-dark d-block m-auto">Détails</a>';
@@ -38,6 +57,8 @@
         ?>
     </div>
 </div>
+
+
 
 
 <?php
