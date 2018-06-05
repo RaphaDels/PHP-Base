@@ -27,3 +27,13 @@ Au niveau du PHP, nous aurons besoin de créer plusieurs fichiers :
 - Ne pas oublier le bouton pour soumettre le formulaire
 - Ne pas oublier la méthode du formulaire
 - Lorsque le formulaire est soumis, il faudra récupérer la valeur de chacun des champs
+
+## Recherche d'une bière
+
+- Ajouter un formulaire de recherche dans le header avec un champ texte "query" et un bouton "Rechercher"
+- On peut saisir le nom d'une bière et quand on soumet le formulaire, on doit être redirigé vers
+search.php?q=SAISIE
+- Créer un fichier search.php (inclure le header et le footer)
+- Vérifier que la clé "q" existe dans la superglobale $_GET
+- Si la clé existe, on doit effectuer une requête SQL qui va chercher toutes les bières ayant le nom qui contient la valeur saisie.
+- Afficher les résultats de la même manière que sur la page des bières, le titre sera "Résultat de votre recherche pour : SAISIE"
