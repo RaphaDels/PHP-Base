@@ -1,6 +1,8 @@
     <div class="container">
       <footer>
+        <!-- 
         <p>Nombre de requêtes sql : <?php echo $countSQL; ?></p>
+        -->
       </footer>
     </div>
   

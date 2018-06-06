@@ -41,20 +41,27 @@ require('functions.php');
                 <?php $page = basename($_SERVER['REQUEST_URI'], '.php'); ?>
 
                 <ul class="navbar-nav ml-auto ">
-                    <li class="nav-item <?php echo ($page == 'index') ? 'active' : '' ?>">
+                    <!--
+                    <li class="nav-item <?php // echo ($page == 'index') ? 'active' : '' ?>">
                         <a class="nav-link" href="index.php">Accueil <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item <?php echo ($page == 'brewery_list') ? 'active' : '' ?>">
-                        <a class="nav-link" href="brewery_list.php">Nos brasseries</a>
+                    -->
+                    <li class="nav-item dropdown <?php echo ($page == 'beer_list' || $page == 'beer_add') ? 'active' : '' ?>">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">Bières</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="beer_list.php">Nos bières</a>
+                            <a class="dropdown-item" href="beer_add.php">Ajouter une bière</a>
+                        </div>
                     </li>
-                    <li class="nav-item <?php echo ($page == 'beer_list') ? 'active' : '' ?>">
-                        <a class="nav-link" href="beer_list.php">Nos bières</a>
+                    <li class="nav-item dropdown <?php echo ($page == 'brewery_list' || $page == 'brewery_add') ? 'active' : '' ?>">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">Brasseries</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="brewery_list.php">Nos brasseries</a>
+                            <a class="dropdown-item" href="brewery_add.php">Ajouter une brasserie</a>
+                        </div>
                     </li>
-                    <li class="nav-item <?php echo ($page == 'beer_add') ? 'active' : '' ?>">
-                        <a class="nav-link" href="beer_add.php">Add a beer</a>
-                    </li>
-                    <li class="nav-item <?php echo ($page == 'brewery_add') ? 'active' : '' ?>">
-                        <a class="nav-link" href="brewery_add.php">Add a brewery</a>
+                    <li class="nav-item <?php echo ($page == 'register') ? 'active' : '' ?>">
+                        <a class="nav-link" href="register.php">Se connecter<span class="sr-only">(current)</span></a>
                     </li>
                 </ul>
             </div>

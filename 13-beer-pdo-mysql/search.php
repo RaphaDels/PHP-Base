@@ -1,5 +1,8 @@
 <?php
 
+    //EXERCICE POUR PLUS TARD : ne fait la recherche que sur les bières et pas sur tout le site
+    
+
     //je vérifie s'il n'y a PAS eu de recherche dans l'input search
     if (!isset($_GET['q']) || empty($_GET['q'])) {
         //dasn ce cas => redirection temporaire (302) vers la liste des bières avec: header('Location: ')
@@ -21,7 +24,7 @@
         $beers = $sqlquery->fetchAll();
         //var_dump($beers);
 
-        //count() -> compte tous les éléments d'un tableau ou quelque chose d'un objet
+        //count() -> compte tous les éléments d'un tableau ou quelque chose d'un objet 
         if (count($beers) > 0) {
             ?>
             <div class="container pt-5">

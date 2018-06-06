@@ -3,11 +3,11 @@
     require('partials/header.php'); 
 
 
-    //Requête pour récupérer les brasseries
+    //Requête pour récupérer les brasseries dans la bdd
     $query = $db->query('SELECT * FROM brewery');
     $breweries = $query->fetchAll();
     //var_dump($breweries);
-    $countSQL++;
+    //$countSQL++;
 ?>
 
 
@@ -28,7 +28,7 @@
             <tbody>
             <?php
                 foreach ($breweries as $brewery) { 
-                $countSQL++; ?>
+                //$countSQL++; ?>
                 <tr>
                     <td><?php echo $brewery['name']; ?></td>
                     <td><?php echo $brewery['address']; ?></td>
