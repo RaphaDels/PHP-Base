@@ -19,18 +19,21 @@ $query = $db->prepare('SELECT * FROM beer WHERE id = :id'); // :id est un param�
 $query->bindValue(':id', $id, PDO::PARAM_INT); // On s'assure que l'id est bien un entier
 $query->execute(); // Execute la requête
 $beer = $query->fetch();
+$countSQL++; // Incrémente le nombre de requêtes
 
 // Récupérer la marque de la bière
 // Le prepare n'est pas obligatoire si la variable ne vient pas d'une entrée utilisateur
 // Une entrée utilisateur vient de $_GET ou $_POST
 $query = $db->query('SELECT * FROM brand WHERE id = '.$beer['brand_id']);
 $brand = $query->fetch();
+$countSQL++;
 
 // Récupérer l'EBC de la bière
 $query = $db->prepare('SELECT * FROM ebc WHERE id = :id');
 $query->bindValue(':id', $beer['ebc_id'], PDO::PARAM_INT);
 $query->execute();
 $ebc = $query->fetch();
+$countSQL++;
 
 ?>
 

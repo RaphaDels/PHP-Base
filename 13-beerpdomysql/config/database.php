@@ -13,6 +13,8 @@ try { // Essaye le code
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING, // Active les erreurs SQL
     ]);
+    // Permettra de compter le nombre de requêtes faites sur la page
+    $countSQL = 0;
 } catch (Exception $e) { // Si le code renvoie une erreur, fais quelque chose
     echo $e->getMessage(); // On récupére le message de l'exception
     // On peut ouvrir un nouvel onglet qui effectue une recherche sur Google avec l'erreur qu'on a obtenu

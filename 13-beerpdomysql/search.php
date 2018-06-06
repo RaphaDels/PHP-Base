@@ -1,25 +1,30 @@
 <?php
 
+// S'il n'y a pas eu de recherche ou qu'elle est vide
+if (!isset($_GET['query']) || empty($_GET['query'])) {
+    // Redirection vers la liste des bières
+    header('Location: beer_list.php');
+    exit();
+}
+
 // Inclure le fichier config/database.php
 // Inclure le fichier partials/header.php
-require('partials/header.php');
-
-// Récupérer la liste des bières
-// Requête
-$query = $db->query(
-    'SELECT beer.id, beer.name, beer.image, brand.id as id_brand, brand.name as name_brand, ebc.code, ebc.color
-    FROM beer
-    INNER JOIN brand ON beer.brand_id = brand.id
-    INNER JOIN ebc ON beer.ebc_id = ebc.id'
-);
-// Résultat
-$beers = $query->fetchAll();
-$countSQL++;
-?>
+require('partials/header.php'); ?>
 
 <!-- Le contenu de la page -->
 <div class="container pt-5">
-    <h1>La liste des bières</h1>
+    <?php
+        $query = $_GET['query'];
+
+        echo sprintf('<h1>Résultat de votre recherche pour : %s</h1>', $query);
+        // Récupérer la liste des bières qui correspondent au terme de recherche
+        $SQLquery = $db->prepare('SELECT * FROM beer WHERE `name` LIKE :query');
+        // Le pourcentage signifie n'importe quel caractère
+        $SQLquery->bindValue(':query', '%'.$query.'%', PDO::PARAM_STR);
+        $SQLquery->execute();
+        $beers = $SQLquery->fetchAll();
+    ?>
+
     <div class="row pt-4">
         <?php
         // On affiche la liste des bières
@@ -30,8 +35,6 @@ $countSQL++;
                     echo '<div class="card-body">';
                         echo '<p class="text-center font-weight-bold">';
                             echo $beer['name'];
-                            echo '<br /> Marque : ' . $beer['name_brand'];
-                            echo '<br /> Couleur : ' . $beer['color'];
                         echo '</p>';
                         // Ajouter un bouton (a href) "Voir la bière"
                         // Quand on clique sur le bouton, on doit se rendre sur la page beer_single.php
@@ -46,5 +49,7 @@ $countSQL++;
 </div>
 
 <?php
+// Inclure le fichier s'occupant des logs
+require('utils/logs.php');
 // Inclure le fichier partials/footer.php
 require('partials/footer.php');

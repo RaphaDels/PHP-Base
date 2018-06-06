@@ -30,6 +30,10 @@ require(__DIR__.'/../config/database.php');
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <form class="form-inline my-2 my-lg-0 mx-auto" method="GET" action="search.php">
+                    <input class="form-control mr-sm-2" type="search" name="query" placeholder="Recherche">
+                    <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
+                </form>
                 <?php
                 // Permet de récupérer le nom de la page sur laquelle on se trouve
                 $page = basename($_SERVER['REQUEST_URI'], '.php'); ?>
