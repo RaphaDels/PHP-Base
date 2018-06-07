@@ -23,6 +23,7 @@
                     <th scope="col">Ville</th>
                     <th scope="col">Pays</th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -36,14 +37,17 @@
                     <td><?php echo $brewery['city']; ?></td>
                     <td><?php echo $brewery['country']; ?></td>
                     <td><?php echo '<a href="brewery_single.php?id='.$brewery['id'].'" class="btn btn-dark d-block m-auto">+</a>'; ?></td>
+                    <!-- Le bouton "supprimer la brasserie" doit être visible uniquement si l'utilisateur est connecté (cf. functions.php) -->
+                    <td><?php 
+                        if (userIsLogged()) {
+                            echo '<a href="brewery_delete.php?id='.$brewery['id'].'" class="btn btn-danger d-block m-auto">-</a>'; ?></td>
+                    <?php } ?>
                 <?php } ?>
                 </tr>
             </tbody>
         </table>    
     </div>
 </div>
-
-
 
     
 <?php

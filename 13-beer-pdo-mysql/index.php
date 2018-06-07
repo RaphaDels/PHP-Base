@@ -7,7 +7,7 @@
 
 <!-- Le contenu de la page d'accueil -->
 <div class="container pt-5">
-    <h1>Bienvenue sur Beer PDO !</h1>
+    <h1>Bienvenue sur Beer L❤️vers !</h1>
 </div>
 
 

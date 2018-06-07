@@ -1,6 +1,12 @@
 <?php
     //lien avec le header pour avoir accès à database.php
-    require('partials/header.php'); 
+        require('partials/header.php'); 
+
+    //Si l'utilisateur est connecté, on le redirige vers la home
+        if (userIsLogged()) {    
+            header('Location : index.php');
+            exit();
+        }
 
 
     $login = null; 
@@ -50,50 +56,36 @@
 
         var_dump($login, $email, $password, $cfpassword, $errors);
     }
-
-
-
-
-
-
-
-
-
-
 ?>
 
-<!-- Le contenu de la page -->
-<div class="container pt-5">
-    <h1>Inscription</h1>
-    
-    <div class="row pt-3">
-        <form method="POST" action="">
-        <div class="form-group">
-                <label for="login">Login</label>
-                <input type="text" name="login" class="form-control" id="login" placeholder="nom">
-            </div>
+    <!-- Le contenu de la page -->
+    <div class="container pt-5">
+        <h1>Inscription</h1>
+
+
+        <div class="row pt-3">
+            <form method="POST" action="">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="email">
-                <small id="emailHelp" class="form-text text-muted">Ces données resteront confidentielles</small>
-            </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" name="password" class="form-control" id="password" placeholder="mot de passe">
-            </div>
-            <div class="form-group">
-                <label for="cfpassword">Confirmation du mot de passe</label>
-                <input type="password" name="cfpassword" class="form-control" id="cfpassword" placeholder="confirmation du mot de passe">
-            </div>
-            <button type="submit" class="btn btn-dark">C'est parti !</button>
-        </form>
+                    <label for="login">Login</label>
+                    <input type="text" name="login" class="form-control" id="login" placeholder="nom">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="email">
+                    <small id="emailHelp" class="form-text text-muted">Ces données resteront confidentielles</small>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="mot de passe">
+                </div>
+                <div class="form-group">
+                    <label for="cfpassword">Confirmation du mot de passe</label>
+                    <input type="password" name="cfpassword" class="form-control" id="cfpassword" placeholder="confirmation du mot de passe">
+                </div>
+                <button type="submit" class="btn btn-dark">C'est parti !</button>
+            </form>
+        </div>
     </div>
-</div>
-
-
-
-
-
 
 
 <?php

@@ -13,21 +13,9 @@
     //var_dump($brewery);
     $countSQL++; //incrémente le nombre de requêtes dans le footer
 */
-
-
-    //La function breweryExists() permet de vérifier si une brasserie existe ou non en BDD (true ou false)
-    function breweryExists($id) {
-        global $db;         //permet d'utiliser la variable $db définie en dehors de la fonction
-        $query = $db->prepare('SELECT * FROM brewery WHERE id = :id');
-        $query->bindValue(':id', $id, PDO::PARAM_INT);
-        $query->execute();
-        $brewery = $query->fetch();
-        return $brewery;     //retourne un tbl avec la brasserie ou false si la brasserie n'existe pas
-    }
-
     //empty() vérifie aussi le isset() -> remplace : if(!isset($_GET['id']) || empty($_GET['id']))
 
-    //Je vérifie si un id existe dans l'url et si la brasserie existe en bdd ?
+    //Je vérifie si un id existe dans l'url et si la brasserie existe en bdd ? (fonction breweryExists déplacée dasn functions.php)
     $brewery = breweryExists($_GET['id']);
     if(empty($_GET['id']) || !$brewery) {
         //permet de renvoyer une 404 si la brasserie n'existe pas 
