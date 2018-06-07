@@ -41,11 +41,29 @@ require(__DIR__.'/../config/database.php');
                     <li class="nav-item <?php echo ($page == 'index') ? 'active' : '' ?>">
                         <a class="nav-link" href="index.php">Accueil</a>
                     </li>
-                    <li class="nav-item <?php echo ($page == 'beer_list') ? 'active' : '' ?>">
-                        <a class="nav-link" href="beer_list.php">Les Bières</a>
+                    <li class="nav-item dropdown <?php echo ($page == 'beer_list' || $page == 'beer_add') ? 'active' : '' ?>">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                            Bières
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="beer_list.php">Les Bières</a>
+                            <a class="dropdown-item" href="beer_add.php">Ajouter une bière</a>
+                        </div>
                     </li>
-                    <li class="nav-item <?php echo ($page == 'beer_add') ? 'active' : '' ?>">
-                        <a class="nav-link" href="beer_add.php">Ajouter une bière</a>
+                    <li class="nav-item dropdown <?php echo ($page == 'brewery_list' || $page == 'brewery_add') ? 'active' : '' ?>">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                            Brasseries
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="brewery_list.php">Les Brasseries</a>
+                            <a class="dropdown-item" href="brewery_add.php">Ajouter une brasserie</a>
+                        </div>
+                    </li>
+                    <li class="nav-item <?php echo ($page == 'register') ? 'active' : '' ?>">
+                        <a class="nav-link" href="register.php">Inscription</a>
+                    </li>
+                    <li class="nav-item <?php echo ($page == 'login') ? 'active' : '' ?>">
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                 </ul>
             </div>

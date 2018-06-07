@@ -40,7 +40,7 @@ search.php?q=SAISIE
 
 # CRUD Brasserie
 
-- Créer une page "brewery_list.php" qui liste les brasseries présentes dans la base de données (Nom, adresse, ville, code postal et pays). Tables de Bootstrap.
+- Créer une page "brewery_list.php" qui liste les brasseries présentes dans la base de données (Nom, adresse, ville, code postal et pays). Par exemple les Tables de Bootstrap.
 - Créer une page "brewery_single.php" qui affiche les informations d'une brasserie seule
 - Créer une page "brewery_add.php" qui affichera un formulaire permettant d'ajouter la brasserie dans la base de données.
     - name: Au minimum 3 caractères
