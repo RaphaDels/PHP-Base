@@ -3,17 +3,6 @@
 // Inclure le fichier partials/header.php
 require('partials/header.php');
 
-// La fonction permet de vérifier si une brasserie existe ou non en BDD (true ou false)
-function breweryExists($id) {
-    global $db;  // Permet d'utiliser la variable $db définie en dehors de la fonction
-    $query = $db->prepare('SELECT * FROM brewery WHERE id = :id');
-    $query->bindValue(':id', $id, PDO::PARAM_INT);
-    $query->execute();
-    $brewery = $query->fetch();
-    
-    return $brewery; // La fonction retourne un tableau avec la brasserie ou false si la brasserie n'existe pas
-}
-
 // Est-ce qu'un ID existe dans l'url ? Est-ce que la brasserie existe en BDD ?
 $brewery = breweryExists($_GET['id']);
 if (empty($_GET['id']) || !$brewery) {

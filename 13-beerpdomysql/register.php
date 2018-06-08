@@ -1,4 +1,11 @@
-<?php require('partials/header.php'); ?>
+<?php require('partials/header.php');
+
+if (userIsLogged()) { // Si l'utilisateur est connecté, on le redirige vers la home
+    header('Location: index.php');
+    exit();
+}
+
+?>
 
 <div class="container pt-5">
     <h1>Inscription</h1>
