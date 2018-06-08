@@ -113,4 +113,21 @@ function breweryExists($id) {
     cookieAuthentication();
 
 
+
+//Fontion ISVALIDTOKEN (utilisée dans reset_pwd.php)
+    
+function isValidToken($token, $id) {
+    global $db;
+    $query = $db->prepare('SELECT * FROM user WHERE id = :id');
+    $query->bindValue(':id', $id, PDO::PARAM_STR);
+    $query->execute();
+    $user = $query->fetch();
+
+    if ($token == hash('sha256', $user['id'].$user['password'].$user['created_at'])) {
+        return true;
+    }
+}
+
+
+
 ?>

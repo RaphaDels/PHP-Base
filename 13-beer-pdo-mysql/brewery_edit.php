@@ -3,14 +3,27 @@
     require('partials/header.php'); 
 
 
-    //Initialiser les variables du formulaire
-        $name = null;
-        $address = null; 
-        $zip = null;
-        $city = null;
-        $country = null;
+    //Je vérifie si un id existe dans l'url et si la brasserie existe en bdd ? (fonction breweryExists déplacée dasn functions.php)
+    
+    if(empty($_GET['id']) || !$brewery = breweryExists($_GET['id'])) {  //je définis la variable dans le if (!!! c'est une assignation, pas une comparaison)
+        //permet de renvoyer une 404 si la brasserie n'existe pas 
+        header('HTTP/1.0 404 Not Found');
+        //la 404 personnalisée
+        echo '<div class="container text-center mt-5"><h1>404</h1></div>'; 
+        require('partials/footer.php');
+        exit; //on arrête le script pour ne pas executer inutilement ce qui suit
+    }
 
-    //VERIFIER SI LE FORMULAIRE EST BIEN SOUMIS (DONC REMPLI)
+
+    //Pour avoir les champs pré-remplis :
+        $name = $brewery['name'];
+        $address = $brewery['address']; 
+        $zip = $brewery['zip'];
+        $city = $brewery['city'];;
+        $country = $brewery['country'];;
+
+
+    //LES VERIFICATIONS SONT LES MEMES QUE POUR UN AJOUT
     if(!empty($_POST)) {  
         $name = $_POST['name'];         //doit faire au moins 3 caractères 
         $address = $_POST['address'];   //doit faire au moins 10 caractères
@@ -54,21 +67,24 @@
         }
 
 
-        //QUAND LE FORMULAIRE EST VALIDE (LE TBL D'ERREUR EST VIDE) => AJOUTER LA BRASSERIE
+        //QUAND LE FORMULAIRE EST VALIDE (LE TBL D'ERREUR EST VIDE) => METTRE A JOUR LA BRASSERIE
         if (empty($errors)) {
-            $query = $db->prepare('
-            INSERT INTO brewery (`name`, address, zip, city, country)  
-            VALUES (:name, :address, :zip, :city, :country)
+            $query = $db->prepare('             
+            UPDATE brewery 
+            SET `name` = :name, address = :address, zip = :zip, city = :city, country = :country  
+            WHERE id = :id
             '); 
+            //Ne pas oublier la condition avec WHERE !
+            $query->bindValue(':id', $brewery['id'], PDO::PARAM_INT);
             $query->bindValue(':name', $name, PDO::PARAM_STR);
             $query->bindValue(':address', $address, PDO::PARAM_STR);
             $query->bindValue(':zip', $zip, PDO::PARAM_STR);
             $query->bindValue(':city', $city, PDO::PARAM_STR); 
             $query->bindValue(':country', $country, PDO::PARAM_STR);
            
-            //Insère la brasserie dans la bdd en executant la fonction
+            //Insère les modifications dans la bdd en executant la fonction
             if ($query->execute()) {
-                echo '<div class="alert alert-success">La brasserie a bien été ajoutée !</div>';
+                echo '<div class="alert alert-success">La brasserie a bien été modifiée !</div>';
             }
         }
     } //end of if(!empty($_POST))
@@ -76,8 +92,7 @@
 
 
 <div class="container pt-5">
-
-    <h1>Ajoutez une brasserie</h1>
+    <h1>Modifier la brasserie<?php echo ' '.$brewery['name']; ?></h1>
 
     <div class="row pt-3">
         <form method="POST" action="" enctype="multipart/form-data">
@@ -118,7 +133,7 @@
                     } ?>
             </div>
             <div class="">
-                <button type="submit" class="btn btn-dark my-2">Ajouter !</button>
+                <button type="submit" class="btn btn-dark my-2">Modifier !</button>
             </div>    
         </form>
     </div>

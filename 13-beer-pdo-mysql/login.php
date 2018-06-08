@@ -47,7 +47,7 @@
             header('Location: '.$_GET['referer']);
             exit();
         }
-        var_dump($errors);
+        //var_dump($errors);
     }
 ?>
 
@@ -72,7 +72,10 @@
                     Se rappeler de moi
                 </label>
             </div>
-            <button type="submit" class="btn btn-dark">Me connecter</button>
+            <div class="my-2">
+                <a href="forgotten_pwd.php">Mot de passe oublié</a>
+            </div>
+            <button type="submit" class="btn btn-dark mt-2">Me connecter</button>
         </form>
     </div>
 </div>
@@ -80,7 +83,7 @@
 
 
 <?php
-    var_dump($_SERVER);
+    //var_dump($_SERVER);
 
     //Inclure le fichier partials/footer.php 
     require('partials/footer.php'); 

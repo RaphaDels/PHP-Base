@@ -24,6 +24,7 @@
                     <th scope="col">Pays</th>
                     <th scope="col"></th>
                     <th scope="col"></th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -36,13 +37,17 @@
                     <td><?php echo $brewery['zip']; ?></td>
                     <td><?php echo $brewery['city']; ?></td>
                     <td><?php echo $brewery['country']; ?></td>
-                    <td><?php echo '<a href="brewery_single.php?id='.$brewery['id'].'" class="btn btn-dark d-block m-auto">+</a>'; ?></td>
-                    <!-- Le bouton "supprimer la brasserie" doit être visible uniquement si l'utilisateur est connecté (cf. functions.php) -->
+                    <td><?php echo '<a href="brewery_single.php?id='.$brewery['id'].'" class="btn btn-dark d-block m-auto">détails</a>'; ?></td>
+                    <!-- Les boutons "update" et "supprimer" doivent être visibles uniquement si l'utilisateur est connecté (cf. functions.php) -->                    
                     <td><?php 
                         if (userIsLogged()) {
-                            echo '<a href="brewery_delete.php?id='.$brewery['id'].'" class="btn btn-danger d-block m-auto">-</a>'; ?></td>
-                    <?php } ?>
-                <?php } ?>
+                            echo '<a href="brewery_edit.php?id='.$brewery['id'].'" class="btn btn-success d-block m-auto">update</a>'; ?></td>
+                        <?php } ?>
+                    <td><?php 
+                        if (userIsLogged()) {
+                            echo '<a href="brewery_delete.php?id='.$brewery['id'].'" class="btn btn-danger confirm-delete d-block m-auto">suppr</a>'; ?></td>
+                        <?php } ?>
+                <?php } ?> <!-- fin du foreach -->   
                 </tr>
             </tbody>
         </table>    

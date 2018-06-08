@@ -93,4 +93,4 @@ require(__DIR__.'/../config/functions.php');
     </nav>
     
     <?php
-    //var_dump($_SESSION);  //
+    

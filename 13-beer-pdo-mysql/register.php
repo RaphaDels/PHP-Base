@@ -54,14 +54,13 @@
             }
         }
 
-        var_dump($login, $email, $password, $cfpassword, $errors);
+        //var_dump($login, $email, $password, $cfpassword, $errors);
     }
 ?>
 
     <!-- Le contenu de la page -->
     <div class="container pt-5">
         <h1>Inscription</h1>
-
 
         <div class="row pt-3">
             <form method="POST" action="">
