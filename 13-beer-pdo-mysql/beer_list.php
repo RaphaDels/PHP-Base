@@ -12,7 +12,7 @@
     //var_dump($beers);
     */
 
-    //Requête pour récupérer la marque et l'ebc en plus du nom et de l'image (requete ci-dessus)
+    //Requête pour récupérer la marque et l'ebc en plus du nom et de l'image (requête ci-dessus)
     $query = $db->query(
         'SELECT beer.id, beer.name, beer.image, brand.id as id_brand, brand.name as name_brand, ebc.code, ebc.color 
         FROM beer

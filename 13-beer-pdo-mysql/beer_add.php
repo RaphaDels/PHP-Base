@@ -139,7 +139,8 @@
 
                         //Insère la bière dans la bdd en executant la fonction
                         if ($query->execute()) {    
-                            //UPLOAD DE L'IMAGE
+                        
+                        //UPLOAD DE L'IMAGE
                             //Récupérer l'emplacement temporaire du fichier
                             $file = $_FILES['image']['tmp_name']; //cf var_dump($_FILES)
 
@@ -159,7 +160,7 @@
                             //Déposer le fichier dans le dossier img
                             move_uploaded_file($file, __DIR__.'/img/'.$filename);
 
-                            //Requête pour mettre à jour la bière en bdd afin d'associer l'image uploadée
+                        //REQUETE pour mettre à jour la bière en bdd afin d'associer l'image uploadée
                             $query = $db->prepare('UPDATE beer SET `image` = :image WHERE id = :id');
                             $query->bindValue(':image', 'img/'.$filename, PDO::PARAM_STR);
                             $query->bindValue(':id', $db->lastInsertId(), PDO::PARAM_INT); //on récupère l'id de la dernière bière ajoutée
